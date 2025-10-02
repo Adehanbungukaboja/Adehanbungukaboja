@@ -19,4 +19,4 @@
 ## 🏃 진행 상황
 | 주차 | 진행 상황 |
 |------|---------|
-| 1주차 | [week1.md](./progress/week1.md) |
+| 1주차 | [week1](https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues/10) |
