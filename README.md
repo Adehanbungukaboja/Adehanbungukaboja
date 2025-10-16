@@ -18,3 +18,4 @@
 | 주차 | 진행 상황 |
 |------|---------|
 | 1주차 | [week1](https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues/10) |
+| 2주차 | [week2](https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues/21) |
