@@ -121,7 +121,7 @@ public class AutoGitHelper {
         String branchName = String.format("%s/%s/%s", type, problemNum, engName);
         String newFileName = String.format("%s_%s_%s%s", type, problemNum, engName, fileExtension);
 
-        Path targetDir = Paths.get("BOJ".equals(type) ? "BOJ" : "src", type, problemNum);
+        Path targetDir = Paths.get("BOJ".equals(type) ? "BOJ" : "src", problemNum);
         Files.createDirectories(targetDir);
 
         Path srcFile = Paths.get(srcFileName);
