@@ -18,11 +18,20 @@ public class AutoGitHelper {
 
         Scanner sc = new Scanner(System.in, "UTF-8");
 
-        System.out.print("문제타입 입력 (boj/pgs/swea): ");
-        String type = sc.next().toUpperCase();
+        // ✅ 문제 타입 입력 검증
+        String type = "";
+        while (type.isEmpty()) {
+            System.out.print("문제타입 입력 (boj/pgs/swea): ");
+            String input = sc.nextLine().trim().toUpperCase();
+            if (input.equals("BOJ") || input.equals("PGS") || input.equals("SWEA")) {
+                type = input;
+            } else {
+                System.out.println("⚠️ 올바른 문제 타입을 입력하세요 (boj/pgs/swea)");
+            }
+        }
 
         System.out.print("문제번호 입력: ");
-        String problemNum = sc.next();
+        String problemNum = sc.nextLine().trim();
 
         String problemName = "";
 
@@ -46,27 +55,51 @@ public class AutoGitHelper {
                     System.out.println("문제 제목: " + problemName);
                 } else {
                     System.out.print("문제 제목을 찾지 못했습니다. 직접 입력: ");
-                    problemName = sc.next();
+                    problemName = sc.nextLine().trim();
                 }
             } catch (Exception e) {
                 System.out.print("크롤링 실패. 수동 입력: ");
-                problemName = sc.next();
+                problemName = sc.nextLine().trim();
             }
         } else {
             System.out.print("문제 이름 입력: ");
-            problemName = sc.next();
+            problemName = sc.nextLine().trim();
         }
 
         System.out.print("영문 이름 입력: ");
-        String engName = sc.next();
+        String engName = sc.nextLine().trim();
 
         System.out.print("한글 이름 입력: ");
-        String korName = sc.next();
+        String korName = sc.nextLine().trim();
 
-        // 파일명 입력 (공백이면 Main.java 기본값)
-        sc.nextLine(); // 버퍼 비우기
         System.out.print("소스 파일명 입력 (공백=Main.java): ");
         String inputFileName = sc.nextLine().trim();
+
+        // ✅ 문제 링크 입력
+        String problemLink = "";
+        if (type.equals("BOJ")) {
+            problemLink = "https://www.acmicpc.net/problem/" + problemNum;
+        } else {
+            System.out.print("문제 링크 입력: ");
+            problemLink = sc.nextLine().trim();
+        }
+
+        // ✅ 언어 선택 (기본값: JAVA)
+        System.out.print("Java를 사용하셨나요? (Enter=yes, n=no): ");
+        String langInput = sc.nextLine().trim().toLowerCase();
+        boolean isJava = langInput.isEmpty() || !langInput.equals("n");
+        boolean isCpp = !isJava;
+
+        // ✅ 성능 정보 입력
+        System.out.print("메모리 입력 (" + (type.equals("PGS") ? "MB" : "KB") + "): ");
+        String memory = sc.nextLine().trim();
+        String memoryUnit = type.equals("PGS") ? "MB" : "KB";
+
+        System.out.print("실행 시간 입력 (ms): ");
+        String execTime = sc.nextLine().trim();
+
+        System.out.print("푸는 데 걸린 시간 입력 (분): ");
+        String solveTime = sc.nextLine().trim();
 
         String srcFileName;
         String fileExtension;
@@ -97,26 +130,51 @@ public class AutoGitHelper {
             return;
         }
 
+        // ✅ git 명령 실행 (파일 이동 전에 브랜치 생성)
+        runCommand("git checkout main");  // main 브랜치로 먼저 이동
+        runCommand("git checkout -b " + branchName);
+
         Path destFile = targetDir.resolve(newFileName);
         // 안전하게 복사 후 삭제
         Files.copy(srcFile, destFile, StandardCopyOption.REPLACE_EXISTING);
         Files.delete(srcFile);
 
-        // ✅ git 명령 실행
-        runCommand("git checkout -b " + branchName);
         runCommand("git add .");
 
-        // ✅ 커밋 메시지 UTF-8 파일로 만들어서 전달
-        String commitMsg = String.format("[%s %s] %s - %s", type, problemNum, problemName, korName);
+        // ✅ 커밋 메시지 UTF-8 파일로 만들어서 전달 (제목 + body)
+        String commitTitle = String.format("[%s %s] %s - %s", type, problemNum, problemName, korName);
+
+        // 커밋 body 템플릿 생성
+        StringBuilder commitBody = new StringBuilder();
+        commitBody.append("\n\n"); // 제목과 body 사이 공백
+        commitBody.append("## 🔗 문제 링크\n");
+        commitBody.append(String.format("[%s %s - %s](%s)\n\n", type, problemNum, problemName, problemLink));
+        commitBody.append("## 📘 언어\n");
+        commitBody.append(String.format("- [%s] C++\n", isCpp ? "x" : " "));
+        commitBody.append(String.format("- [%s] JAVA\n\n", isJava ? "x" : " "));
+        commitBody.append("## ⏱️ 성능\n");
+        commitBody.append(String.format("- 메모리: %s %s\n", memory, memoryUnit));
+        commitBody.append(String.format("- 실행 시간: %s ms\n", execTime));
+        commitBody.append(String.format("- 푸는 데 걸린 시간(개인): %s 분\n\n", solveTime));
+        commitBody.append("## ✏️ 풀이 아이디어\n");
+        commitBody.append("- 핵심 접근 방법 요약\n");
+        commitBody.append("- 사용한 알고리즘 / 자료구조\n");
+
+        String fullCommitMsg = commitTitle + commitBody.toString();
+
         Path tempMsg = Files.createTempFile("git_commit_msg_", ".txt");
-        Files.writeString(tempMsg, commitMsg, StandardCharsets.UTF_8);
+        Files.writeString(tempMsg, fullCommitMsg, StandardCharsets.UTF_8);
         runCommand("git commit -F \"" + tempMsg.toAbsolutePath() + "\"");
         Files.deleteIfExists(tempMsg);
+
+        // ✅ push 실행
+        runCommand("git push -u origin " + branchName);
 
         System.out.println("\n✅ 모든 작업 완료!");
         System.out.println("📂 이동된 파일: " + destFile.toAbsolutePath());
         System.out.println("🌿 브랜치명: " + branchName);
-        System.out.println("💬 커밋 메시지: " + commitMsg);
+        System.out.println("💬 커밋 제목: " + commitTitle);
+        System.out.println("🚀 Push 완료! GitHub에서 PR을 생성하세요.");
     }
 
     // ✅ Windows / Mac / Linux 자동 감지
