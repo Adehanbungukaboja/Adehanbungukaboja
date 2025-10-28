@@ -18,7 +18,7 @@ public class AutoGitHelper {
 
         Scanner sc = new Scanner(System.in, "UTF-8");
 
-        // ✅ 문제 타입 입력 검증
+        // 문제 타입 입력 검증
         String type = "";
         while (type.isEmpty()) {
             System.out.print("문제타입 입력 (boj/pgs/swea): ");
@@ -35,7 +35,7 @@ public class AutoGitHelper {
 
         String problemName = "";
 
-        // ✅ BOJ 문제 제목 크롤링
+        // BOJ 문제 제목 크롤링
         if (type.equals("BOJ")) {
             try {
                 String url = "https://www.acmicpc.net/problem/" + problemNum;
@@ -75,7 +75,7 @@ public class AutoGitHelper {
         System.out.print("소스 파일명 입력 (공백=Main.java): ");
         String inputFileName = sc.nextLine().trim();
 
-        // ✅ 문제 링크 입력
+        // 문제 링크 입력
         String problemLink = "";
         if (type.equals("BOJ")) {
             problemLink = "https://www.acmicpc.net/problem/" + problemNum;
@@ -84,13 +84,13 @@ public class AutoGitHelper {
             problemLink = sc.nextLine().trim();
         }
 
-        // ✅ 언어 선택 (기본값: JAVA)
+        // 언어 선택
         System.out.print("Java를 사용하셨나요? (Enter=yes, n=no): ");
         String langInput = sc.nextLine().trim().toLowerCase();
         boolean isJava = langInput.isEmpty() || !langInput.equals("n");
         boolean isCpp = !isJava;
 
-        // ✅ 성능 정보 입력
+        // 성능 정보 입력
         System.out.print("메모리 입력 (" + (type.equals("PGS") ? "MB" : "KB") + "): ");
         String memory = sc.nextLine().trim();
         String memoryUnit = type.equals("PGS") ? "MB" : "KB";
@@ -109,19 +109,19 @@ public class AutoGitHelper {
             fileExtension = ".java";
         } else {
             srcFileName = inputFileName;
-            // 확장자 추출
             int dotIndex = inputFileName.lastIndexOf('.');
             if (dotIndex > 0) {
                 fileExtension = inputFileName.substring(dotIndex);
             } else {
-                fileExtension = ".java"; // 기본값
+                fileExtension = ".java";
             }
         }
 
         String branchName = String.format("%s/%s/%s", type, problemNum, engName);
         String newFileName = String.format("%s_%s_%s%s", type, problemNum, engName, fileExtension);
 
-        Path targetDir = Paths.get("BOJ".equals(type) ? "BOJ" : "src", problemNum);
+        // 📂 targetDir 문제타입/문제번호
+        Path targetDir = Paths.get(type, problemNum);
         Files.createDirectories(targetDir);
 
         Path srcFile = Paths.get(srcFileName);
@@ -130,23 +130,21 @@ public class AutoGitHelper {
             return;
         }
 
-        // ✅ git 명령 실행 (파일 이동 전에 브랜치 생성)
-        runCommand("git checkout main");  // main 브랜치로 먼저 이동
+        // git 명령 실행 (파일 이동 전에 브랜치 생성)
+        runCommand("git checkout main");  // main 브랜치로 이동
         runCommand("git checkout -b " + branchName);
 
         Path destFile = targetDir.resolve(newFileName);
-        // 안전하게 복사 후 삭제
         Files.copy(srcFile, destFile, StandardCopyOption.REPLACE_EXISTING);
         Files.delete(srcFile);
 
         runCommand("git add .");
 
-        // ✅ 커밋 메시지 UTF-8 파일로 만들어서 전달 (제목 + body)
+        // 커밋 메시지 생성
         String commitTitle = String.format("[%s %s] %s - %s", type, problemNum, problemName, korName);
 
-        // 커밋 body 템플릿 생성
         StringBuilder commitBody = new StringBuilder();
-        commitBody.append("\n\n"); // 제목과 body 사이 공백
+        commitBody.append("\n\n");
         commitBody.append("## 🔗 문제 링크\n");
         commitBody.append(String.format("[%s %s - %s](%s)\n\n", type, problemNum, problemName, problemLink));
         commitBody.append("## 📘 언어\n");
@@ -167,7 +165,7 @@ public class AutoGitHelper {
         runCommand("git commit -F \"" + tempMsg.toAbsolutePath() + "\"");
         Files.deleteIfExists(tempMsg);
 
-        // ✅ push 실행
+        // push
         runCommand("git push -u origin " + branchName);
 
         System.out.println("\n✅ 모든 작업 완료!");
@@ -177,7 +175,7 @@ public class AutoGitHelper {
         System.out.println("🚀 Push 완료! GitHub에서 PR을 생성하세요.");
     }
 
-    // ✅ Windows / Mac / Linux 자동 감지
+    // Windows / Mac / Linux 자동 감지
     private static void runCommand(String cmd) throws IOException, InterruptedException {
         String os = System.getProperty("os.name").toLowerCase();
         ProcessBuilder pb;
