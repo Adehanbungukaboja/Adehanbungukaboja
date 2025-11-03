@@ -8,28 +8,28 @@ on:
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh jq
-
-      - name: Merge PRs older than 14 days (no conflicts)
+      
+      - name: Merge PRs older than 10 days (no conflicts)
         env:
           GH_TOKEN: ${{ secrets.PERSONAL_TOKEN }}  # PAT 필요
           REPO: ${{ github.repository }}
         run: |
-          echo "🔍 Searching for pull requests older than 14 days..."
-          prs=$(gh pr list --repo "$REPO" --state open --json number,createdAt,mergeable --jq '.[] | select((now - (.createdAt | fromdate)) > (14*24*60*60)) | select(.mergeable == "MERGEABLE") | .number')
-
+          echo "🔍 Searching for pull requests older than 10 days..."
+          prs=$(gh pr list --repo "$REPO" --state open --json number,createdAt,mergeable --jq '.[] | select((now - (.createdAt | fromdate)) > (10*24*60*60)) | select(.mergeable == "MERGEABLE") | .number')
+          
           if [ -z "$prs" ]; then
             echo "✅ No eligible PRs found."
             exit 0
           fi
-
+          
           for pr in $prs; do
             echo "🌀 Attempting to merge PR #$pr..."
-            gh pr merge $pr --repo "$REPO" --merge --admin --auto
+            gh pr merge $pr --repo "$REPO" --squash --delete-branch || echo "❌ Failed to merge PR #$pr"
           done
