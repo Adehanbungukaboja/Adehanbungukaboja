@@ -31,5 +31,5 @@ jobs:
 
           for pr in $prs; do
             echo "🌀 Attempting to merge PR #$pr..."
-            gh pr merge $pr --repo "$REPO" --merge --admin --auto
+            gh pr merge $pr --repo "$REPO" --merge --admin --delete-branch
           done
