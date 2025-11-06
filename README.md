@@ -15,7 +15,4 @@
 - PR을 날린다. (남기고 싶은 내용을 남긴다.) ex) `[BOJ 16985] Maaaaaaaaaze - 오지현`
 
 ## 🏃 진행 상황
-| 주차 | 진행 상황 |
-|------|---------|
-| 1주차 | [week1](https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues/10) |
-| 2주차 | [week2](https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues/21) |
+https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues
