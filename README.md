@@ -22,8 +22,13 @@ https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues
 
 # 알고리즘 스터디 (어디한번 코테에 죽어보자 🔥)
 
+<img width="521" height="512" alt="image" src="https://github.com/user-attachments/assets/667924f2-48f8-4171-a2b6-7e782c623fe0" />
+
+<img width="415" height="248" alt="image" src="https://github.com/user-attachments/assets/cfcc3333-f15c-4fff-a2d2-1cf3191bb3f4" />
+
+
 ## 1. 스터디 목표
-2025 상반기 취뽀를 위해 코테 문제를 꾸준히 푼다.
+2026 상반기 취뽀를 위해 코테 문제를 꾸준히 푼다.
 
 ## 2. 제출 형태
 ```
