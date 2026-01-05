@@ -1,5 +1,5 @@
 <!--
-# 비밀스러운 알고리즘 스터디
+# 비밀스러운 코테 스터디
 ## 🎯 목표
 코테는 무조건 뚫는다 !!!
 
@@ -20,7 +20,7 @@ https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues
 -->
 
 
-# 쉿! 비밀스러운 알고리즘 스터디 (어디한번 코테에 죽어보자 🔥)
+# 쉿! 비밀스러운 코테 스터디 (어디한번 코테에 죽어보자 🔥)
 
 <img width="421" height="512" alt="image" src="https://github.com/user-attachments/assets/667924f2-48f8-4171-a2b6-7e782c623fe0" />
 
