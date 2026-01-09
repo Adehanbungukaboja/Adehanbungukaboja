@@ -22,9 +22,7 @@ https://github.com/Adehanbungukaboja/Adehanbungukaboja/issues
 
 # 쉿! 비밀스러운 코테 스터디 (어디한번 코테에 죽어보자 🔥)
 
-<img width="421" height="512" alt="image" src="https://github.com/user-attachments/assets/667924f2-48f8-4171-a2b6-7e782c623fe0" />
-
-
+<img width="600" height="" alt="image" src="https://github.com/user-attachments/assets/6e067f95-37a8-4f0c-be7f-defcfb646c8b" />
 
 ## 1. 스터디 목표
 2026 상반기 취뽀를 위해 코테 문제를 꾸준히 자율적으로 푼다.
